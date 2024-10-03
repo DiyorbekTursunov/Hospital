@@ -26,9 +26,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TabsContent } from "@/components/ui/tabs";
-import { DialogEditDepartment } from "@/components/ui_elements/department/department_update_modal";
+
 import { useRooms } from "@/hooks/useRooms";
 import { DialogEditRoom } from "./room_update_modal";
+import { DialogDeleteAlertRoom } from "./RoomDeleteAlert";
 
 export default function RoomTab({}) {
   const { rooms, setRooms, error, loading } = useRooms();
@@ -71,37 +72,30 @@ export default function RoomTab({}) {
               ) : (
                 rooms.map((room, index) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">
-                      {room.number}
-                    </TableCell>
+                    <TableCell className="font-medium">{room.number}</TableCell>
                     <TableCell className="font-medium">
                       {room.maxcount}
                     </TableCell>
                     <TableCell className="font-medium">
                       {room.department}
                     </TableCell>
+                    <TableCell className="font-medium">{room.status}</TableCell>
                     <TableCell className="font-medium">
-                      {room.status}
+                      {new Date(room.createdTime).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: true,
+                      })}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {new Date(room.createdTime).toLocaleString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                          hour12: true,
-                        }
-                      )}
+                      {room.userId.slice(0, 6)}...
                     </TableCell>
                     <TableCell className="font-medium">
-                      {room.userId}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {room._id}
+                      {room._id.slice(0, 6)}...
                     </TableCell>
 
                     <TableCell>
@@ -122,16 +116,14 @@ export default function RoomTab({}) {
                             _id={room._id}
                             maxcount={room.maxcount}
                             number={room.number}
-                            setRooms={setRooms}
+                            setRoom={setRooms}
                             department={room.department}
                           />
-                          <div
-                            className="relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-slate-100 cursor-pointer"
-                            data-orientation="vertical"
-                            data-radix-collection-item=""
-                          >
-                            Delete
-                          </div>
+                          <DialogDeleteAlertRoom
+                            _id={room._id}
+                            number={room.number}
+                            setRoom={setRooms}
+                          />
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -149,7 +141,7 @@ export default function RoomTab({}) {
           </Table>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <span>{rooms.length} departments</span>
+          <span>{rooms.length} rooms</span>
         </CardFooter>
       </Card>
     </TabsContent>

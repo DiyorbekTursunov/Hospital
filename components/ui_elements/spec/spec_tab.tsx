@@ -26,18 +26,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TabsContent } from "@/components/ui/tabs";
-import { DialogEditDepartment } from "@/components/ui_elements/department/department_update_modal";
-import { DialogDeleteAlert } from "./DepartmentDeleteAlert";
-import { useDepartments } from "@/hooks/useDepartments";
+import { useSpec } from "@/hooks/useSpec";
+import { DialogEditSpec } from "./spec_update_modal";
+import { DialogDeleteAlertSpec } from "./SpecDeleteAlert";
+// import { DialogEditRoom } from "./room_update_modal";
+// import { DialogDeleteAlertRoom } from "./RoomDeleteAlert";
 
-export default function DepartmentTab({}) {
-  const { departments,setDepartments , error, loading } = useDepartments();
+export default function SpecTab({}) {
+  const { specs, setSpecs, error, loading } = useSpec();
+
+  console.log(specs);
 
   return (
-    <TabsContent value="department">
+    <TabsContent value="spec">
       <Card>
         <CardHeader>
-          <CardTitle>Department</CardTitle>
+          <CardTitle>Spec</CardTitle>
           <CardDescription>
             Manage your products and view their sales performance.
           </CardDescription>
@@ -48,15 +52,11 @@ export default function DepartmentTab({}) {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="hidden md:table-cell">Id</TableHead>
-                <TableHead className="hidden md:table-cell">
-                  Total Sales
-                </TableHead>
                 <TableHead className="hidden md:table-cell">
                   Created at
                 </TableHead>
-                <TableHead className="hidden md:table-cell">User id</TableHead>
-                <TableHead className="hidden md:table-cell">Actions</TableHead>
+                <TableHead className="hidden md:table-cell">User Id</TableHead>
+                <TableHead className="hidden md:table-cell">Id</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -67,37 +67,30 @@ export default function DepartmentTab({}) {
                   </TableCell>
                 </TableRow>
               ) : (
-                departments.map((department, index) => (
+                specs.map((spec, index) => (
                   <TableRow key={index}>
+                    <TableCell className="font-medium">{spec.title}</TableCell>
                     <TableCell className="font-medium">
-                      {department.title}
+                      {spec.status}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {department.status}
+                      {new Date(spec.createdTime).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: true,
+                      })}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {department._id.slice(0,6)}...
+                      {spec.userId.slice(0, 6)}...
                     </TableCell>
                     <TableCell className="font-medium">
-                      {department.boss === null && "null"}
+                      {spec._id.slice(0, 6)}...
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {new Date(department.createdTime).toLocaleString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                          hour12: true,
-                        }
-                      )}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {department.userId.slice(0,6)}...
-                    </TableCell>
+
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -112,17 +105,15 @@ export default function DepartmentTab({}) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DialogEditDepartment
-                            _id={department._id}
-                            title={department.title}
-                            setDepartments={setDepartments}
-                            departments={departments}
+                          <DialogEditSpec
+                            _id={spec._id}
+                            title={spec.title}
+                            setSpecs={setSpecs}
                           />
-                          <DialogDeleteAlert
-                            _id={department._id}
-                            title={department.title}
-                            setDepartments={setDepartments}
-                            departments={departments}
+                          <DialogDeleteAlertSpec
+                             _id={spec._id}
+                             title={spec.title}
+                             setSpecs={setSpecs}
                           />
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -141,7 +132,7 @@ export default function DepartmentTab({}) {
           </Table>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <span>{departments.length} departments</span>
+          <span>{specs.length} rooms</span>
         </CardFooter>
       </Card>
     </TabsContent>

@@ -11,23 +11,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axiosInstance from "@/lib/axiosBaseUrl";
-import { IDepartment } from "@/lib/IDepartment";
+import { ISpec } from "@/lib/ISpec";
 import { useState } from "react";
 import { toast } from "sonner";
-
 
 interface DepartmentProps {
   _id: string;
   title: string;
-  setDepartments: React.Dispatch<React.SetStateAction<IDepartment[]>>;
-  departments: IDepartment[]; // Pass the departments array as prop
+  setSpecs: React.Dispatch<React.SetStateAction<ISpec[]>>;
 }
 
-export function DialogEditDepartment({
-  _id,
-  title,
-  setDepartments,
-}: DepartmentProps) {
+export function DialogEditSpec({ _id, title, setSpecs }: DepartmentProps) {
   const [newTitle, setNewTitle] = useState<string>(title); // State for department title
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -51,7 +45,7 @@ export function DialogEditDepartment({
 
       // Make the PUT request to update the department
       const response = await axiosInstance.put(
-        "/department", // Endpoint to update the department
+        "/spec", // Endpoint to update the department
         {
           _id, // Include the department ID
           title: newTitle, // Include the new title
@@ -64,12 +58,12 @@ export function DialogEditDepartment({
       );
 
       console.log(response.data); // Handle success response
-      toast("Department successfully updated"); // Update success message
+      toast("Spec successfully updated"); // Update success message
 
       // Immediately update the department in the local state
-      setDepartments((prevDepartments) =>
-        prevDepartments.map((dept) =>
-          dept._id === _id ? { ...dept, title: newTitle } : dept
+      setSpecs((prevSpec) =>
+        prevSpec.map((spec) =>
+          spec._id === _id ? { ...spec, title: newTitle } : spec
         )
       );
 
@@ -95,7 +89,9 @@ export function DialogEditDepartment({
           Edit
         </div>
       </DialogTrigger>
-      <form> {/* Use onSubmit to handle form submission */}
+      <form>
+        {" "}
+        {/* Use onSubmit to handle form submission */}
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Edit Department</DialogTitle>
@@ -112,12 +108,18 @@ export function DialogEditDepartment({
                 onChange={(e) => setNewTitle(e.target.value)}
                 className="col-span-3"
               />
-              {errorMessage && <p className="text-red-500">{errorMessage}</p>} {/* Display error message */}
+              {errorMessage && <p className="text-red-500">{errorMessage}</p>}{" "}
+              {/* Display error message */}
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={loading} onClick={handleEditDepartment}>
-              {loading ? "Saving..." : "Save changes"} {/* Change button text based on loading state */}
+            <Button
+              type="submit"
+              disabled={loading}
+              onClick={handleEditDepartment}
+            >
+              {loading ? "Saving..." : "Save changes"}{" "}
+              {/* Change button text based on loading state */}
             </Button>
           </DialogFooter>
         </DialogContent>

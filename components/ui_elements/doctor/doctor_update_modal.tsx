@@ -77,19 +77,28 @@ export function DialogEditDoctor({
         return;
       }
 
-      await axiosInstance.put(
-        "/doctor",
-        {
-          _id,
-          name: newName,
-          phone: newPhone,
-          spec: newSpec,
-          birthday: newBirthday,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      try {
+        await axiosInstance.put(
+          "/doctor",
+          {
+            _id,
+            name: newName,
+            phone: newPhone,
+            spec: newSpec,
+            birthday: newBirthday,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        // Success logic
+      } catch (error: any) {
+        console.error(
+          "Error:",
+          error.response ? error.response.data : error.message
+        );
+        setErrorMessage("Failed to update doctor. Please try again.");
+      }
 
       toast.success("Doctor successfully updated");
       setIsModalOpen(false);
@@ -121,17 +130,18 @@ export function DialogEditDoctor({
       onOpenChange={() => setIsModalOpen(!isModalOpen)}
     >
       <DialogTrigger asChild>
-        <div className="relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground hover:bg-slate-100 cursor-pointer">
+        <div className="relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-transparent focus:text-accent-foreground hover:bg-transparent cursor-pointer">
           Edit Doctor
         </div>
       </DialogTrigger>
 
-      <form onSubmit={handleEditDoctor}>
+      <form>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Edit Doctor</DialogTitle>
             <DialogDescription>
-              Make changes to your doctor's information here. Click save when you're done.
+              Make changes to your doctor's information here. Click save when
+              you're done.
             </DialogDescription>
           </DialogHeader>
 
@@ -186,7 +196,7 @@ export function DialogEditDoctor({
           </div>
 
           <DialogFooter>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} onClick={handleEditDoctor}>
               {loading ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>

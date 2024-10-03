@@ -32,7 +32,7 @@ export default function CreateRoom() {
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
-  const { departments, setDepartments, error } = useDepartments();
+  const { departments } = useDepartments();
 
   async function handleCreateDepartment(e: React.FormEvent) {
     e.preventDefault();

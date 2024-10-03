@@ -12,21 +12,20 @@ import { useState } from "react";
 import axiosInstance from "@/lib/axiosBaseUrl";
 import { toast } from "sonner";
 import { DropdownMenuCheckboxItem } from "@radix-ui/react-dropdown-menu";
-import { IDepartment } from "@/lib/IDepartment";
+import { IRoom } from "@/lib/IRoom";
 
 
 
 interface DepartmentProps {
   _id: string;
-  title: string;
-  setDepartments: React.Dispatch<React.SetStateAction<IDepartment[]>>;
-  departments: IDepartment[]; // Pass the departments array as prop
+  number: string;
+  setRoom: React.Dispatch<React.SetStateAction<IRoom[]>>;
 }
 
-export function DialogDeleteAlert({
+export function DialogDeleteAlertRoom({
   _id,
-  title,
-  setDepartments,
+  number,
+  setRoom,
 }: DepartmentProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -49,7 +48,7 @@ export function DialogDeleteAlert({
 
       // Make the DELETE request to delete the department
       const response = await axiosInstance.delete(
-        `/department/${_id}`, // Correct endpoint to delete the department
+        `/room/${_id}`, // Correct endpoint to delete the department
         {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the headers
@@ -61,8 +60,8 @@ export function DialogDeleteAlert({
       toast("Department successfully deleted"); // Update success message
 
       // Immediately update the department in the local state
-      setDepartments((prevDepartments) =>
-        prevDepartments.filter((dep) => dep._id !== _id)
+      setRoom((prevRooms) =>
+        prevRooms.filter((room) => room._id !== _id)
       );
 
       setDepartmentsModalIsOpen(false); // Close the modal on success
@@ -97,7 +96,7 @@ export function DialogDeleteAlert({
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader className="px-1 pt-5">
             <DialogTitle>
-              Do you want to delete Department &quot;{title}&quot;?
+              Do you want to delete Room &quot;{number}&quot;?
             </DialogTitle>
             <DialogDescription>
               Confirm if you want to delete your department.
@@ -110,7 +109,7 @@ export function DialogDeleteAlert({
               onClick={handleDeleteDepartment}
             >
               <DropdownMenuCheckboxItem className="border-none">
-                {loading ? "Deleting..." : "Delete Department"}{" "}
+                {loading ? "Deleting..." : "Delete Room"}{" "}
                 {/* Change button text based on loading state */}
               </DropdownMenuCheckboxItem>
             </Button>
